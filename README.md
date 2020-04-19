@@ -1,14 +1,15 @@
-# NodeJS Project Base - Typescript
+# NodeJS Base Project
 
 A base project to initilize nodejs project using typescript.
 
-- [NodeJS-Project-Base](#nodejs-base-project-typescript)
+- [NodeJS-Project-Base](#nodejs-base-project)
   - [Technologies](#technologies)
   - [Installation](#installation)
   - [License](#license)
 
 ## Technologies
 
+- [Typescript](https://www.typescriptlang.org/)
 - [Node](https://nodejs.org/en/)
 - [Express](https://expressjs.com/pt-br/)
 - [Express-Async-Errors](https://www.npmjs.com/package/express-async-errors/)
