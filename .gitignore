@@ -5,3 +5,5 @@ tmp/*
 !tmp/.gitkeep
 .env
 buid
+coverage
+globalConfig.json

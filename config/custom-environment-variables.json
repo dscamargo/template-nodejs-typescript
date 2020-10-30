@@ -1,0 +1,7 @@
+{
+  "App": {
+    "port": "PORT",
+    "env": "NODE_ENV",
+    "mongoUri": "MONGO_URL"
+  }
+}
