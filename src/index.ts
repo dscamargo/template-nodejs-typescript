@@ -1,6 +1,8 @@
+import './module-alias';
 import config from 'config';
 import server from '@src/server';
 import * as database from '@src/database';
+import logger from './logger';
 
 enum ExitStatus {
   Failure = 1,
@@ -23,11 +25,11 @@ process.on('uncaughtException', error => {
 const PORT = config.get<number>('App.port');
 
 const app = server.listen(PORT, () =>
-  console.log(`App listening on port ${PORT}`),
+  logger.info(`App listening on port ${PORT}`),
 );
 
-const exitSignals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
-exitSignals.map(signal =>
+const exitSignals: NodeJS.Signals[] = ['SIGINT', 'SIGQUIT'];
+exitSignals.forEach(signal =>
   process.on(signal, async () => {
     try {
       await app.close(() => console.log('App closed with success'));

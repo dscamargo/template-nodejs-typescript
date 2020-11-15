@@ -1,15 +1,35 @@
 import 'express-async-errors';
 import express, { Request, Response, Express, NextFunction } from 'express';
+import * as Sentry from '@sentry/node';
+import * as SentryTracing from '@sentry/tracing';
+import helmet from 'helmet';
+import cors from 'cors';
+import config from 'config';
 
 import * as database from '@src/database';
 import routes from '@src/routes';
 import AppError from '@src/errors/AppError';
+import rateLimiter from './middlewares/rateLimiter';
+
+const NODE_ENV = config.get<string>('App.env');
+const SENTRY_DSN = config.get<string>('App.monitoring.sentry.dsn');
 
 class App {
   public app: Express;
 
   constructor() {
     this.app = express();
+
+    if (NODE_ENV !== 'development' && NODE_ENV !== 'test') {
+      Sentry.init({
+        dsn: SENTRY_DSN,
+        integrations: [
+          new Sentry.Integrations.Http({ tracing: true }),
+          new SentryTracing.Integrations.Express({ app: this.app }),
+        ],
+        tracesSampleRate: 0.5,
+      });
+    }
 
     this.middlewares();
     this.database();
@@ -18,6 +38,13 @@ class App {
   }
 
   private middlewares(): void {
+    this.app.use(Sentry.Handlers.requestHandler());
+    this.app.use(Sentry.Handlers.tracingHandler());
+    this.app.use(cors());
+    this.app.use(helmet());
+    if (NODE_ENV !== 'test') {
+      this.app.use(rateLimiter);
+    }
     this.app.use(express.json());
   }
 
@@ -27,6 +54,7 @@ class App {
 
   private routes(): void {
     this.app.use(routes);
+    this.app.use(Sentry.Handlers.errorHandler());
   }
 
   private handleErrors(
@@ -55,26 +83,3 @@ class App {
 }
 
 export default new App().app;
-
-// const app = express();
-
-// app.use(express.json());
-// app.use(routes);
-
-// app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
-// if (err instanceof AppError) {
-//   return response.status(err.statusCode).json({
-//     status: 'error',
-//     message: err.message,
-//   });
-// }
-
-// console.error(err);
-
-// return response.status(500).json({
-//   status: 'error',
-//   message: 'Internal server error.',
-// });
-// });
-
-// export default app;

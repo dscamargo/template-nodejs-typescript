@@ -1,12 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { defaults: tsjPreset } = require('ts-jest/presets');
+const { resolve } = require('path');
+const root = resolve(__dirname);
 
 module.exports = {
-  preset: '@shelf/jest-mongodb',
-  transform: tsjPreset.transform,
+  rootDir: root,
+  displayName: 'root-tests',
+  testMatch: ['<rootDir>/src/**/*.test.ts'],
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['./jest.setup.js'],
+  clearMocks: true,
+  preset: '@shelf/jest-mongodb',
   moduleNameMapper: {
     '@src/(.*)': '<rootDir>/src/$1',
+    '@test/(.*)': '<rootDir>/test/$1',
   },
 };

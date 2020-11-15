@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
+import AppRoutes from '@src/routes/app.routes';
+
 const routes = Router();
 
-routes.get('/', (req, res) => {
-  return res.json({ working: true });
-});
+routes.use('/health', AppRoutes);
 
 export default routes;
