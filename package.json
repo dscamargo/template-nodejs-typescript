@@ -35,7 +35,7 @@
     "module-alias": "^2.2.2",
     "mongoose": "^5.10.11",
     "rate-limiter-flexible": "^2.1.13",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "supertest": "^6.0.0",
     "winston": "^3.3.3",
     "winston-logsene": "^2.0.12"
